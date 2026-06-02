@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Joy — UGC Creator · Tech & Products</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#050507;
+  --bg2:#08080C;
+  --surface:#0C0C12;
+  --surface2:#101018;
+  --white:#F2F0F8;
+  --dim:rgba(242,240,248,0.45);
+  --faint:rgba(242,240,248,0.08);
+  --purple:#8B5CF6;
+  --purple-dim:rgba(139,92,246,0.35);
+  --purple-faint:rgba(139,92,246,0.08);
+  --purple-glow:rgba(139,92,246,0.15);
+  --purple-light:#A78BFA;
+  --line:rgba(242,240,248,0.07);
+  --line-purple:rgba(139,92,246,0.2);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;font-weight:400;overflow-x:hidden;cursor:none;}
+
+/* CURSOR */
+.cur{width:5px;height:5px;background:var(--purple);border-radius:0;position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+.cur-ring{width:26px;height:26px;border:1px solid var(--purple-dim);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(45deg);transition:all .35s cubic-bezier(.25,.46,.45,.94);}
+
+/* SCAN LINES */
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(242,240,248,0.007) 2px,rgba(242,240,248,0.007) 4px);pointer-events:none;z-index:7000;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:18px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,7,0.94);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);transition:all .4s;}
+.nav-mono{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--purple);letter-spacing:.05em;}
+.nav-links{display:flex;gap:32px;list-style:none;}
+.nav-links a{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-decoration:none;transition:color .3s;}
+.nav-links a:hover{color:var(--purple-light);}
+.nav-avail{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:.58rem;color:var(--dim);}
+.nav-dot{width:5px;height:5px;border-radius:50%;background:#7BC67E;box-shadow:0 0 6px rgba(123,198,126,.5);animation:pulse 2s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* HERO */
+.hero{min-height:100svh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 64px;}
+.hero-grid-bg{position:absolute;inset:0;background-image:linear-gradient(var(--purple-faint) 1px,transparent 1px),linear-gradient(90deg,var(--purple-faint) 1px,transparent 1px);background-size:56px 56px;}
+.hero-glow{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:100%;height:70%;background:radial-gradient(ellipse 50% 50% at 50% 0%,var(--purple-glow) 0%,transparent 70%);pointer-events:none;}
+.hero-corner{position:absolute;font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(139,92,246,0.3);letter-spacing:.08em;line-height:1.8;}
+.hero-corner.tl{top:88px;left:48px;}
+.hero-corner.tr{top:88px;right:48px;text-align:right;}
+.hero-content{position:relative;z-index:2;}
+.hero-mono{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--purple);letter-spacing:.06em;margin-bottom:24px;display:flex;align-items:center;gap:10px;}
+.hero-mono::before{content:'>';color:var(--purple-light);}
+.hero-h1{font-size:clamp(3.5rem,9vw,8rem);font-weight:800;line-height:.9;text-transform:uppercase;letter-spacing:-.03em;margin-bottom:0;}
+.h1-solid{display:block;color:var(--white);}
+.h1-outline{display:block;color:transparent;-webkit-text-stroke:1px rgba(242,240,248,0.18);}
+.h1-purple{display:block;background:linear-gradient(90deg,var(--purple),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-bottom{display:grid;grid-template-columns:1fr auto;gap:40px;align-items:end;margin-top:48px;padding-top:32px;border-top:1px solid var(--line);}
+.hero-desc{font-size:.75rem;line-height:2;color:var(--dim);max-width:440px;}
+.hero-desc strong{color:var(--white);}
+.hero-actions{display:flex;flex-direction:column;gap:12px;align-items:flex-end;}
+.btn-purple{display:inline-flex;align-items:center;gap:12px;background:var(--purple);color:var(--white);font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:all .3s;cursor:none;}
+.btn-purple:hover{background:var(--purple-light);}
+.btn-outline-purple{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line-purple);color:var(--purple-light);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:all .3s;cursor:none;}
+.btn-outline-purple:hover{border-color:var(--purple);color:var(--purple);}
+
+/* TICKER */
+.ticker-wrap{overflow:hidden;border-top:1px solid var(--line-purple);border-bottom:1px solid var(--line-purple);padding:12px 0;background:var(--purple-faint);}
+.ticker{display:flex;width:max-content;animation:ticker 22s linear infinite;}
+.tick-item{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--purple-light);white-space:nowrap;padding:0 28px;display:flex;align-items:center;gap:28px;}
+.tick-item::after{content:'//';font-size:.45rem;color:var(--purple-dim);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ABOUT STRIP */
+.about-strip{padding:72px 48px;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-bottom:1px solid var(--line);}
+.as-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);letter-spacing:.06em;margin-bottom:20px;}
+.as-h{font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:1;margin-bottom:20px;}
+.as-h em{font-style:normal;background:linear-gradient(90deg,var(--purple),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.as-body{font-size:.73rem;line-height:2;color:var(--dim);}
+.as-pills{display:flex;flex-direction:column;gap:1px;background:var(--line);}
+.as-pill{background:var(--bg2);padding:16px 20px;display:flex;justify-content:space-between;align-items:center;transition:background .3s;}
+.as-pill:hover{background:var(--surface);}
+.as-pill-l{display:flex;align-items:center;gap:14px;}
+.as-pill-code{font-family:'Space Mono',monospace;font-size:.65rem;color:var(--purple);min-width:36px;}
+.as-pill-text{font-size:.68rem;color:var(--white);}
+.as-pill-r{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);}
+
+/* GRID */
+.work-section{padding:0;}
+.work-head{padding:40px 48px 32px;display:flex;justify-content:space-between;align-items:end;border-bottom:1px solid var(--line);}
+.work-title{font-size:clamp(2rem,4vw,3.2rem);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:.95;}
+.work-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);display:block;margin-bottom:10px;}
+.work-tabs{display:flex;}
+.wtab{font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);background:none;border:1px solid var(--line);padding:9px 18px;cursor:pointer;transition:all .3s;font-family:'Syne',sans-serif;margin-left:-1px;}
+.wtab.active,.wtab:hover{background:var(--purple);color:var(--white);border-color:var(--purple);}
+
+.port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);}
+.card{position:relative;overflow:hidden;background:var(--bg);cursor:pointer;}
+.card-media{width:100%;overflow:hidden;position:relative;}
+.card-fill{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;transition:transform .7s cubic-bezier(.25,.46,.45,.94);}
+.card:hover .card-fill{transform:scale(1.04);}
+
+/* Editorial frame */
+.card-frame{position:absolute;inset:12px;border:1px solid rgba(139,92,246,0.12);pointer-events:none;z-index:1;}
+
+.cf1{background:linear-gradient(160deg,#0c0818 0%,#080510 100%);}
+.cf2{background:linear-gradient(160deg,#08080e 0%,#050508 100%);}
+.cf3{background:linear-gradient(160deg,#0a0814 0%,#06060e 100%);}
+.cf4{background:linear-gradient(160deg,#080c10 0%,#050810 100%);}
+.cf5{background:linear-gradient(160deg,#0c0a18 0%,#080614 100%);}
+
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,7,.95) 0%,rgba(5,5,7,.1) 55%,transparent 100%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;z-index:2;}
+.card:hover .card-overlay{opacity:1;}
+.card-cat{font-family:'Space Mono',monospace;font-size:.5rem;color:var(--purple-light);letter-spacing:.08em;margin-bottom:5px;}
+.card-title{font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--white);line-height:1.2;}
+.card-tag{position:absolute;top:12px;left:12px;font-family:'Space Mono',monospace;font-size:.48rem;color:var(--dim);border:1px solid var(--line);padding:3px 8px;z-index:3;backdrop-filter:blur(4px);background:rgba(5,5,7,.4);}
+.card-tag.video{color:var(--purple-light);border-color:var(--line-purple);}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border:1px solid var(--line-purple);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--purple-light);opacity:0;transition:opacity .3s;z-index:3;backdrop-filter:blur(4px);background:rgba(5,5,7,.4);}
+.card:hover .play-btn{opacity:1;}
+
+/* PACKAGES */
+.packages{padding:72px 48px;border-top:1px solid var(--line);}
+.sec-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);letter-spacing:.06em;margin-bottom:28px;}
+.pkg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
+.pkg{background:var(--bg2);padding:32px 24px;position:relative;transition:background .3s;}
+.pkg:hover{background:var(--surface);}
+.pkg-featured{background:var(--surface2);border-top:2px solid var(--purple);}
+.pkg-featured-tag{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;color:var(--purple);background:var(--bg);padding:3px 10px;white-space:nowrap;}
+.pkg-label{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--purple);letter-spacing:.08em;margin-bottom:10px;margin-top:16px;}
+.pkg:not(.pkg-featured) .pkg-label{margin-top:0;}
+.pkg-name{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:14px;text-transform:uppercase;letter-spacing:.02em;}
+.pkg-items{list-style:none;display:flex;flex-direction:column;gap:7px;}
+.pkg-items li{font-size:.62rem;color:var(--dim);display:flex;gap:8px;line-height:1.6;}
+.pkg-items li::before{content:'—';color:var(--purple-dim);flex-shrink:0;}
+
+.pkg-custom{background:var(--surface);border:1px solid var(--line-purple);padding:28px 32px;margin-top:1px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
+.pkg-custom h3{font-size:.85rem;font-weight:600;color:var(--white);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;}
+.pkg-custom p{font-size:.65rem;color:var(--dim);line-height:1.7;max-width:460px;}
+
+.addons-btn{width:100%;background:var(--bg2);border:none;border-top:1px solid var(--purple);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-top:1px;font-family:'Syne',sans-serif;transition:background .3s;}
+.addons-btn:hover{background:var(--surface);}
+.addons-btn-l{display:flex;align-items:center;gap:16px;}
+.addons-lbl{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--purple);letter-spacing:.06em;}
+.addons-sub{font-size:.62rem;color:var(--dim);}
+.addons-plus{font-size:1.3rem;color:var(--purple);transition:transform .3s;}
+.addons-plus.open{transform:rotate(45deg);}
+.addons-grid{display:none;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-top:1px;}
+.addons-grid.open{display:grid;}
+.addon{background:var(--bg2);padding:24px 22px;transition:background .3s;}
+.addon:hover{background:var(--surface);}
+.addon-plus{font-family:'Space Mono',monospace;font-size:.9rem;color:var(--purple);margin-bottom:10px;}
+.addon-title{font-size:.78rem;font-weight:600;color:var(--white);margin-bottom:8px;text-transform:uppercase;letter-spacing:.02em;}
+.addon-body{font-size:.62rem;color:var(--dim);line-height:1.8;}
+.pkg-note{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(242,240,248,.2);text-align:center;letter-spacing:.06em;margin-top:24px;}
+
+/* PROCESS */
+.process{padding:72px 48px;border-top:1px solid var(--line);background:var(--bg2);}
+.proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-top:32px;}
+.pstep{background:var(--bg2);padding:32px 24px;position:relative;overflow:hidden;transition:background .3s;}
+.pstep:hover{background:var(--surface);}
+.pstep::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--purple),transparent);opacity:0;transition:opacity .3s;}
+.pstep:hover::before{opacity:1;}
+.pstep-num{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);margin-bottom:18px;}
+.pstep-title{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--white);margin-bottom:10px;}
+.pstep-body{font-size:.65rem;line-height:1.9;color:var(--dim);}
+
+/* PROOF STRIP */
+.proof{background:var(--surface);padding:20px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-top:1px solid var(--line);}
+.proof-item{font-family:'Space Mono',monospace;font-size:.56rem;color:rgba(242,240,248,.2);letter-spacing:.06em;}
+.proof-avail{display:flex;align-items:center;gap:8px;}
+.proof-dot{width:5px;height:5px;border-radius:50%;background:#7BC67E;box-shadow:0 0 6px rgba(123,198,126,.5);animation:pulse 2s ease-in-out infinite;}
+
+/* CONTACT */
+.contact{padding:100px 48px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-top:1px solid var(--line);}
+.contact-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 30% 50%,var(--purple-faint) 0%,transparent 70%);pointer-events:none;}
+.contact-l{position:relative;z-index:1;}
+.contact-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);letter-spacing:.06em;margin-bottom:20px;}
+.contact-h{font-size:clamp(2.5rem,5.5vw,4.5rem);font-weight:800;text-transform:uppercase;letter-spacing:-.03em;line-height:.9;margin-bottom:24px;}
+.contact-h em{display:block;background:linear-gradient(90deg,var(--purple),var(--purple-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-style:normal;}
+.contact-sub{font-size:.72rem;line-height:2;color:var(--dim);}
+.contact-r{position:relative;z-index:1;display:flex;flex-direction:column;gap:16px;}
+.contact-email{font-size:1.2rem;font-weight:600;color:var(--white);text-decoration:none;border-bottom:1px solid var(--line-purple);padding-bottom:14px;transition:all .3s;display:block;}
+.contact-email:hover{color:var(--purple-light);border-color:var(--purple);}
+.contact-ig{font-size:.65rem;letter-spacing:.1em;color:var(--dim);text-decoration:none;display:flex;align-items:center;gap:8px;transition:color .3s;}
+.contact-ig:hover{color:var(--purple-light);}
+.contact-info{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;}
+.cinfo{font-family:'Space Mono',monospace;font-size:.55rem;color:rgba(242,240,248,.2);display:flex;align-items:center;gap:6px;letter-spacing:.04em;}
+
+/* FOOTER */
+footer{padding:20px 48px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;background:var(--bg);}
+.foot-mono{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(242,240,248,.15);}
+.foot-mid{font-family:'Space Mono',monospace;font-size:.56rem;color:var(--purple);letter-spacing:.06em;opacity:.5;}
+.foot-link{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:rgba(242,240,248,.2);text-decoration:none;transition:color .3s;}
+.foot-link:hover{color:var(--purple-light);}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(20px);transition:opacity .9s cubic-bezier(.25,.46,.45,.94),transform .9s cubic-bezier(.25,.46,.45,.94);}
+.reveal.in{opacity:1;transform:translateY(0);}
+
+/* MOBILE */
+@media(max-width:860px){
+  nav{padding:16px 20px;}
+  .nav-links{display:none;}
+  .hero{padding:0 20px 48px;}
+  .hero-corner{display:none;}
+  .hero-bottom{grid-template-columns:1fr;}
+  .hero-actions{align-items:flex-start;}
+  .about-strip{grid-template-columns:1fr;padding:56px 20px;}
+  .work-head{padding:28px 20px;flex-direction:column;align-items:flex-start;gap:20px;}
+  .port-grid{grid-template-columns:1fr 1fr;}
+  .packages{padding:56px 20px;}
+  .pkg-grid{grid-template-columns:1fr 1fr;}
+  .addons-grid{grid-template-columns:1fr 1fr;}
+  .process{padding:56px 20px;}
+  .proc-grid{grid-template-columns:1fr 1fr;}
+  .contact{grid-template-columns:1fr;padding:56px 20px;}
+  .proof{padding:16px 20px;}
+  footer{flex-direction:column;gap:10px;text-align:center;padding:20px;}
+  body{cursor:auto;}
+  .cur,.cur-ring{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="cur" id="cur"></div>
+<div class="cur-ring" id="ring"></div>
+
+<nav>
+  <span class="nav-mono">// Joy.UGC</span>
+  <ul class="nav-links">
+    <li><a href="#work">Work</a></li>
+    <li><a href="#packages">Packages</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-avail"><div class="nav-dot"></div>Open to new projects</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-glow"></div>
+  <span class="hero-corner tl">UGC_CREATOR // AT → GLOBAL<br>TECH · PRODUCTS · LIFESTYLE</span>
+  <span class="hero-corner tr">DE + EN<br>48H TURNAROUND</span>
+  <div class="hero-content reveal in">
+    <div class="hero-mono">UGC that actually converts</div>
+    <h1 class="hero-h1">
+      <span class="h1-solid">Real.</span>
+      <span class="h1-outline">Relatable.</span>
+      <span class="h1-purple">Results.</span>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc">I make <strong>tech, product and lifestyle UGC</strong> that feels like a trusted recommendation — not an ad you skip. Confident enough to stop the scroll. Real enough to actually sell.<br><br><strong>Austrian creator. Works globally. German & English.</strong></p>
+      <div class="hero-actions">
+        <a href="#work" class="btn-purple">View work →</a>
+        <a href="#contact" class="btn-outline-purple">Get in touch →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="tick-item">Tech UGC</span><span class="tick-item">Product Reviews</span><span class="tick-item">App Demos</span><span class="tick-item">Unboxing</span><span class="tick-item">Lifestyle Products</span><span class="tick-item">Reels & TikTok</span><span class="tick-item">German + English</span><span class="tick-item">Austria → Global</span>
+    <span class="tick-item">Tech UGC</span><span class="tick-item">Product Reviews</span><span class="tick-item">App Demos</span><span class="tick-item">Unboxing</span><span class="tick-item">Lifestyle Products</span><span class="tick-item">Reels & TikTok</span><span class="tick-item">German + English</span><span class="tick-item">Austria → Global</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about-strip">
+  <div class="reveal">
+    <div class="as-mono">// about</div>
+    <h2 class="as-h">Content made by<br>someone who actually<br><em>uses this stuff.</em></h2>
+    <p class="as-body" style="margin-top:16px;">Based in Austria. Working globally. I create tech and product UGC that feels like a recommendation from someone you trust — which is exactly why it converts.<br><br>Bilingual delivery, fast turnaround, licensing tailored per project.</p>
+  </div>
+  <div class="as-pills reveal">
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">[DE]</span><span class="as-pill-text">Deutsch — native quality</span></div><span class="as-pill-r">DACH markets</span></div>
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">[EN]</span><span class="as-pill-text">English — fluent</span></div><span class="as-pill-r">Global reach</span></div>
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">[AT]</span><span class="as-pill-text">Austria-based</span></div><span class="as-pill-r">EU + worldwide</span></div>
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">48H</span><span class="as-pill-text">Fast turnaround</span></div><span class="as-pill-r">Standard</span></div>
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">©</span><span class="as-pill-text">Licensing per project</span></div><span class="as-pill-r">Flexible</span></div>
+    <div class="as-pill"><div class="as-pill-l"><span class="as-pill-code">★★★★★</span><span class="as-pill-text">Quality standard</span></div><span class="as-pill-r">Every time</span></div>
+  </div>
+</section>
+
+<!-- WORK GRID -->
+<section class="work-section" id="work">
+  <div class="work-head reveal">
+    <h2 class="work-title"><span class="work-mono">// selected work</span>Portfolio</h2>
+    <div class="work-tabs">
+      <button class="wtab active" onclick="setTab(this)">All</button>
+      <button class="wtab" onclick="setTab(this)">Tech</button>
+      <button class="wtab" onclick="setTab(this)">Products</button>
+      <button class="wtab" onclick="setTab(this)">Lifestyle</button>
+    </div>
+  </div>
+  <div class="port-grid">
+    <div class="card reveal" style="grid-column:1/3;">
+      <div class="card-media" style="aspect-ratio:16/7;">
+        <div class="card-fill cf1">
+          <div class="card-frame"></div>
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.12)" stroke-width="1"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+      <span class="card-tag video">▶ Video</span>
+      <div class="play-btn">▶</div>
+      <div class="card-overlay"><div class="card-cat">// tech · gadget</div><div class="card-title">Smartphone Feature — Launch Campaign</div></div>
+    </div>
+    <div class="card reveal">
+      <div class="card-media" style="aspect-ratio:4/3;">
+        <div class="card-fill cf2">
+          <div class="card-frame"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="1"><rect x="5" y="2" width="14" height="20" rx="2"/><circle cx="12" cy="17" r="1"/></svg>
+        </div>
+      </div>
+      <span class="card-tag">Photo</span>
+      <div class="card-overlay"><div class="card-cat">// app · saas</div><div class="card-title">App Walkthrough</div></div>
+    </div>
+    <div class="card reveal">
+      <div class="card-media" style="aspect-ratio:4/3;">
+        <div class="card-fill cf3">
+          <div class="card-frame"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg>
+        </div>
+      </div>
+      <span class="card-tag">Photo</span>
+      <div class="card-overlay"><div class="card-cat">// lifestyle</div><div class="card-title">Everyday Carry Series</div></div>
+    </div>
+    <div class="card reveal">
+      <div class="card-media" style="aspect-ratio:4/3;">
+        <div class="card-fill cf4">
+          <div class="card-frame"></div>
+          <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="1"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+      <span class="card-tag video">▶ Video</span>
+      <div class="play-btn">▶</div>
+      <div class="card-overlay"><div class="card-cat">// review · ugc</div><div class="card-title">Honest Product Review</div></div>
+    </div>
+    <div class="card reveal" style="grid-column:2/4;">
+      <div class="card-media" style="aspect-ratio:16/7;">
+        <div class="card-fill cf5">
+          <div class="card-frame"></div>
+          <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.12)" stroke-width="1"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        </div>
+      </div>
+      <span class="card-tag video">▶ Video</span>
+      <div class="play-btn">▶</div>
+      <div class="card-overlay"><div class="card-cat">// unboxing · reveal</div><div class="card-title">Premium Unboxing — Brand Launch</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- PACKAGES -->
+<section class="packages" id="packages">
+  <div class="sec-mono reveal">// how we work together</div>
+  <div class="pkg-grid reveal">
+    <div class="pkg">
+      <div class="pkg-label">// starter</div>
+      <div class="pkg-name">Single Video</div>
+      <ul class="pkg-items"><li>1 polished UGC video</li><li>1 hook</li><li>1 format / platform</li><li>Raw file included</li></ul>
+    </div>
+    <div class="pkg">
+      <div class="pkg-label">// core</div>
+      <div class="pkg-name">Content Pack</div>
+      <ul class="pkg-items"><li>3–5 videos</li><li>Multiple hooks</li><li>Format variations</li><li>Photo content</li></ul>
+    </div>
+    <div class="pkg pkg-featured">
+      <div class="pkg-featured-tag">Most Popular</div>
+      <div class="pkg-label">// pro</div>
+      <div class="pkg-name">Monthly Retainer</div>
+      <ul class="pkg-items"><li>Ongoing monthly content</li><li>Priority access</li><li>Consistent voice</li><li>No re-briefing</li><li>Discounted rate</li></ul>
+    </div>
+    <div class="pkg">
+      <div class="pkg-label">// performance</div>
+      <div class="pkg-name">Commission</div>
+      <ul class="pkg-items"><li>Views + clicks + sales</li><li>Skin in the game</li><li>True creative partner</li><li>Agreed upfront</li></ul>
+    </div>
+  </div>
+
+  <div class="pkg-custom reveal">
+    <div><h3>Something else?</h3><p>Every brand is different. If none of the above fits — let's talk and build the right package together.</p></div>
+    <a href="#contact" class="btn-purple">Get in touch →</a>
+  </div>
+
+  <button class="addons-btn reveal" onclick="toggleAddons(this)">
+    <div class="addons-btn-l">
+      <span class="addons-lbl">// add-ons</span>
+      <span class="addons-sub">Extra hooks, usage rights, bilingual delivery and more — click to explore</span>
+    </div>
+    <span class="addons-plus" id="aplus">+</span>
+  </button>
+  <div class="addons-grid" id="addons">
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Extra Hooks</div><p class="addon-body">Same video, different opening. More entry points into the same story.</p></div>
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Additional Videos</div><p class="addon-body">Scale up any package at a reduced per-unit rate.</p></div>
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Usage Rights Upgrade</div><p class="addon-body">Paid ads, extra platforms, longer licensing window. Agreed per project.</p></div>
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Bilingual Delivery</div><p class="addon-body">German and English versions. One brief, two markets.</p></div>
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Rush Turnaround</div><p class="addon-body">Priority delivery when timing is critical.</p></div>
+    <div class="addon"><div class="addon-plus">+</div><div class="addon-title">Raw Footage</div><p class="addon-body">Unedited clips for your in-house team to remix and repurpose.</p></div>
+  </div>
+  <p class="pkg-note reveal">// Pricing tailored per project · Products gifted for content use · Licensing agreed upfront</p>
+</section>
+
+<!-- PROCESS -->
+<section class="process">
+  <div class="sec-mono reveal">// process</div>
+  <div class="proc-grid reveal">
+    <div class="pstep"><div class="pstep-num">01 // brief</div><div class="pstep-title">You Send the Brief</div><p class="pstep-body">Brief, references, product details. I'll confirm and reply within 24h.</p></div>
+    <div class="pstep"><div class="pstep-num">02 // create</div><div class="pstep-title">I Create</div><p class="pstep-body">I film, edit and deliver. Full production. Product shipped to me or on-site.</p></div>
+    <div class="pstep"><div class="pstep-num">03 // deliver</div><div class="pstep-title">Files Delivered</div><p class="pstep-body">Platform-ready, your format, on time. Licensing agreed upfront.</p></div>
+    <div class="pstep"><div class="pstep-num">04 // revise</div><div class="pstep-title">One Revision Round</div><p class="pstep-body">Included as standard. We go until it's exactly what you need.</p></div>
+  </div>
+</section>
+
+<!-- PROOF STRIP -->
+<div class="proof">
+  <span class="proof-item">★★★★★ // quality every time</span>
+  <span class="proof-item">AT → EU → GLOBAL · DE + EN</span>
+  <span class="proof-avail proof-item"><span class="proof-dot"></span>&nbsp;// open to new projects</span>
+</div>
+
+<!-- CONTACT -->
+<section class="contact" id="contact">
+  <div class="contact-bg"></div>
+  <div class="contact-l reveal">
+    <div class="contact-mono">// let's build something</div>
+    <h2 class="contact-h">Ready to<br><em>work together?</em></h2>
+    <p class="contact-sub">Austrian-based UGC creator. Available for tech, product and lifestyle brands globally. German and English. Licensing tailored per project. Products gifted for content use.</p>
+  </div>
+  <div class="contact-r reveal">
+    <a href="mailto:hello@joy-creates.com" class="contact-email">hello@joy-creates.com</a>
+    <a href="https://instagram.com" class="contact-ig" target="_blank">→ @yourhandle</a>
+    <div class="contact-info">
+      <span class="cinfo">AT-based</span>
+      <span class="cinfo">Global projects</span>
+      <span class="cinfo">24h response</span>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span class="foot-mono">© 2025 Joy // Tech & Products UGC</span>
+  <span class="foot-mid">Austria → Global</span>
+  <a href="portfolio-luxury-final.html" class="foot-link">← Luxury Portfolio</a>
+</footer>
+
+<script>
+const cur=document.getElementById('cur'),ring=document.getElementById('ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cur.style.left=mx+'px';cur.style.top=my+'px';});
+(function a(){rx+=(mx-rx)*.1;ry+=(my-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(a);})();
+const io=new IntersectionObserver(entries=>entries.forEach((e,i)=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),i*60);io.unobserve(e.target);}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+function toggleAddons(btn){const grid=document.getElementById('addons');const plus=document.getElementById('aplus');const open=grid.classList.toggle('open');plus.classList.toggle('open',open);}
+function setTab(btn){document.querySelectorAll('.wtab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+</script>
+</body>
+</html>
