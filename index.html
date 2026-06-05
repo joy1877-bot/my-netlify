@@ -3,9 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="cache-control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="pragma" content="no-cache">
-<meta http-equiv="expires" content="0">
 <title>Joy D. — Pretty Calculated · Tech & Lifestyle UGC</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -20,8 +17,8 @@
 html{scroll-behavior:smooth;}
 body{background:var(--bg);color:var(--white);font-family:'Syne',sans-serif;overflow-x:hidden;cursor:none;}
 .cur{width:5px;height:5px;background:var(--purple);position:fixed;top:0;left:0;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
-.cur-ring{width:26px;height:26px;border:1px solid var(--pd);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(45deg);transition:all .35s cubic-bezier(.165,.84,.44,1);}
-body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(242,240,248,0.007) 2px,rgba(242,240,248,0.007) 4px);pointer-events:none;z-index:1;}
+.cur-ring{width:26px;height:26px;border:1px solid var(--pd);position:fixed;top:0;left:0;pointer-events:none;z-index:9998;transform:translate(-50%,-50%) rotate(45deg);transition:all .35s cubic-bezier(.25,.46,.45,.94);}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(242,240,248,0.007) 2px,rgba(242,240,248,0.007) 4px);pointer-events:none;z-index:7000;}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:flex;justify-content:space-between;align-items:center;background:rgba(5,5,7,0.95);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);}
 .nav-logo{display:flex;align-items:center;background:transparent;border:none;padding:0;text-decoration:none;}
@@ -33,6 +30,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .nav-dot{width:5px;height:5px;border-radius:50%;background:#7BC67E;box-shadow:0 0 6px rgba(123,198,126,.5);animation:pulse 2s ease-in-out infinite;}
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.3;}}
 
+/* HERO */
 .hero{min-height:100svh;position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:flex-end;padding:0 48px 64px;}
 .hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--pf) 1px,transparent 1px),linear-gradient(90deg,var(--pf) 1px,transparent 1px);background-size:56px 56px;}
 .hero-glow{position:absolute;top:-10%;left:50%;transform:translateX(-50%);width:100%;height:70%;background:radial-gradient(ellipse 50% 50% at 50% 0%,var(--pg) 0%,transparent 70%);pointer-events:none;}
@@ -50,22 +48,25 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .hero-desc{font-size:.75rem;line-height:2;color:var(--dim);max-width:440px;}
 .hero-desc strong{color:var(--white);}
 .hero-actions{display:flex;flex-direction:column;gap:12px;align-items:flex-end;}
-.btn-purple{display:inline-flex;align-items:center;gap:12px;background:var(--purple);color:var(--white);font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:background .3s;border:none;cursor:pointer;}
+.btn-purple{display:inline-flex;align-items:center;gap:12px;background:var(--purple);color:var(--white);font-family:'Syne',sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:all .3s;cursor:pointer;border:none;}
 .btn-purple:hover{background:var(--pl);}
-.btn-op{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--lp);color:var(--pl);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:all .3s;background:none;cursor:pointer;}
+.btn-op{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--lp);color:var(--pl);font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;text-decoration:none;padding:13px 24px;transition:all .3s;cursor:pointer;background:none;}
 .btn-op:hover{border-color:var(--purple);color:var(--purple);}
 
+/* TICKER */
 .ticker-wrap{overflow:hidden;border-top:1px solid var(--lp);border-bottom:1px solid var(--lp);padding:12px 0;background:var(--pf);}
 .ticker{display:flex;width:max-content;animation:ticker 22s linear infinite;}
 .tick-item{font-family:'Space Mono',monospace;font-size:.58rem;letter-spacing:.1em;color:var(--pl);white-space:nowrap;padding:0 28px;display:flex;align-items:center;gap:28px;}
 .tick-item::after{content:'//';font-size:.45rem;color:var(--pd);}
 @keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
+/* CATEGORY NAV */
 .cat-nav{background:var(--bg2);padding:20px 48px;border-bottom:1px solid var(--line);display:flex;gap:0;flex-wrap:wrap;align-items:center;}
 .cat-mono{font-family:'Space Mono',monospace;font-size:.55rem;color:var(--purple);letter-spacing:.06em;margin-right:16px;}
-.cat-btn{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.08em;color:rgba(242,240,248,.35);background:none;border:1px solid var(--line);padding:8px 16px;cursor:pointer;transition:all .2s;}
+.cat-btn{font-family:'Space Mono',monospace;font-size:.55rem;letter-spacing:.08em;color:rgba(242,240,248,.35);background:none;border:1px solid var(--line);padding:8px 16px;cursor:pointer;transition:all .3s;margin-right:-1px;position:relative;z-index:1;}
 .cat-btn:hover,.cat-btn.active{background:var(--purple);color:var(--white);border-color:var(--purple);z-index:2;}
 
+/* GRID */
 .port-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);}
 .card{position:relative;overflow:hidden;background:var(--bg);cursor:pointer;}
 .card-media{width:100%;overflow:hidden;position:relative;}
@@ -77,23 +78,24 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .cf3{background:linear-gradient(160deg,#0a0814 0%,#06060e 100%);}
 .cf4{background:linear-gradient(160deg,#080c10 0%,#050810 100%);}
 .cf5{background:linear-gradient(160deg,#0c0a18 0%,#080614 100%);}
-.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,7,.95) 0%,transparent 60%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:24px;}
+.card-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(5,5,7,.95) 0%,transparent 60%);opacity:0;transition:opacity .4s;display:flex;flex-direction:column;justify-content:flex-end;padding:20px;z-index:2;cursor:pointer;}
 .card:hover .card-overlay{opacity:1;}
 .card-cat{font-family:'Space Mono',monospace;font-size:.5rem;color:var(--pl);letter-spacing:.08em;margin-bottom:5px;}
 .card-title{font-size:.9rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;color:var(--white);line-height:1.2;}
 .card-see{margin-top:8px;font-family:'Space Mono',monospace;font-size:.48rem;letter-spacing:.1em;color:rgba(167,139,250,.5);display:flex;align-items:center;gap:6px;}
 .card-tag{position:absolute;top:12px;left:12px;font-family:'Space Mono',monospace;font-size:.48rem;color:var(--dim);border:1px solid var(--line);padding:3px 8px;z-index:3;backdrop-filter:blur(4px);background:rgba(5,5,7,.4);}
 .card-tag.video{color:var(--pl);border-color:var(--lp);}
-.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border:1px solid var(--lp);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--pl);opacity:0;transition:opacity .3s;}
+.play-btn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:36px;height:36px;border:1px solid var(--lp);display:flex;align-items:center;justify-content:center;font-size:.6rem;color:var(--pl);opacity:0;transition:opacity .3s;z-index:3;backdrop-filter:blur(4px);}
 .card:hover .play-btn{opacity:1;}
 
+/* PACKAGES */
 .packages{padding:72px 48px;border-top:1px solid var(--line);}
 .sec-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);letter-spacing:.06em;margin-bottom:28px;}
 .pkg-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);}
 .pkg{background:var(--bg2);padding:32px 24px;position:relative;transition:background .3s;}
 .pkg:hover{background:var(--surf);}
 .pkg-feat{background:var(--surf2);border-top:2px solid var(--purple);}
-.pkg-feat-tag{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;color:var(--purple);background:var(--bg2);padding:6px 12px;}
+.pkg-feat-tag{position:absolute;top:-1px;left:50%;transform:translateX(-50%);font-family:'Space Mono',monospace;font-size:.45rem;letter-spacing:.15em;text-transform:uppercase;color:var(--purple);background:var(--bg);padding:3px 10px;white-space:nowrap;}
 .pkg-label{font-family:'Space Mono',monospace;font-size:.52rem;color:var(--purple);letter-spacing:.08em;margin-bottom:10px;margin-top:16px;}
 .pkg:not(.pkg-feat) .pkg-label{margin-top:0;}
 .pkg-name{font-size:1rem;font-weight:700;color:var(--white);margin-bottom:14px;text-transform:uppercase;letter-spacing:.02em;}
@@ -103,7 +105,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .pkg-custom{background:var(--surf);border:1px solid var(--lp);padding:28px 32px;margin-top:1px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px;}
 .pkg-custom h3{font-size:.85rem;font-weight:600;color:var(--white);margin-bottom:6px;text-transform:uppercase;letter-spacing:.03em;}
 .pkg-custom p{font-size:.65rem;color:var(--dim);line-height:1.7;max-width:460px;}
-.addons-btn{width:100%;background:var(--bg2);border:none;border-top:1px solid var(--purple);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-top:1px;transition:background .3s;}
+.addons-btn{width:100%;background:var(--bg2);border:none;border-top:1px solid var(--purple);padding:18px 24px;display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-top:1px;font-family:'Syne',sans-serif;transition:background .3s;}
 .addons-btn:hover{background:var(--surf);}
 .addons-lbl{font-family:'Space Mono',monospace;font-size:.6rem;color:var(--purple);letter-spacing:.06em;}
 .addons-sub{font-size:.62rem;color:var(--dim);margin-left:16px;}
@@ -118,6 +120,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .addon-body{font-size:.62rem;color:var(--dim);line-height:1.8;}
 .pkg-note{font-family:'Space Mono',monospace;font-size:.58rem;color:rgba(242,240,248,.2);text-align:center;letter-spacing:.06em;margin-top:24px;}
 
+/* ABOUT — compact, after portfolio */
 .about{padding:56px 48px;border-top:1px solid var(--line);background:var(--bg2);display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
 .as-mono{font-family:'Space Mono',monospace;font-size:.62rem;color:var(--purple);letter-spacing:.06em;margin-bottom:16px;}
 .as-h{font-size:clamp(1.4rem,2.5vw,2rem);font-weight:800;text-transform:uppercase;letter-spacing:-.02em;line-height:1;margin-bottom:16px;}
@@ -131,6 +134,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .as-pill-text{font-size:.67rem;color:var(--white);}
 .as-pill-r{font-size:.58rem;letter-spacing:.1em;text-transform:uppercase;color:var(--dim);}
 
+/* PROCESS */
 .process{padding:56px 48px;border-top:1px solid var(--line);background:var(--bg);}
 .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-top:28px;}
 .pstep{background:var(--bg);padding:28px 22px;position:relative;overflow:hidden;transition:background .3s;}
@@ -141,11 +145,13 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:14px 48px;display:fl
 .pstep-title{font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--white);margin-bottom:8px;}
 .pstep-body{font-size:.63rem;line-height:1.9;color:var(--dim);}
 
+/* PROOF */
 .proof{background:var(--surf);padding:18px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-top:1px solid var(--line);}
 .proof-item{font-family:'Space Mono',monospace;font-size:.56rem;color:rgba(242,240,248,.2);letter-spacing:.06em;}
 .proof-avail{display:flex;align-items:center;gap:8px;}
 .proof-dot{width:5px;height:5px;border-radius:50%;background:#7BC67E;box-shadow:0 0 6px rgba(123,198,126,.5);animation:pulse 2s ease-in-out infinite;}
 
+/* CONTACT */
 .contact{padding:80px 48px;position:relative;overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;border-top:1px solid var(--line);}
 .contact-bg{position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 30% 50%,var(--pf) 0%,transparent 70%);pointer-events:none;}
 .contact-l{position:relative;z-index:1;}
@@ -248,29 +254,29 @@ footer{padding:18px 48px;border-top:1px solid var(--line);display:flex;justify-c
 
 <div class="port-grid">
   <div class="card reveal" style="grid-column:1/3;">
-    <div class="card-media" style="aspect-ratio:16/7;background:linear-gradient(160deg,#0c0818 0%,#080510 100%);"></div>
+    <div class="card-media" style="aspect-ratio:16/7;"><div class="card-fill cf1"><div class="card-frame"></div><svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div></div>
     <span class="card-tag video">▶ Video</span>
     <div class="play-btn">▶</div>
     <div class="card-overlay" onclick="window.location='tech-gadgets.html'"><div class="card-cat">// tech · gadget</div><div class="card-title">Smartphone Feature — Launch Campaign</div><div class="card-see">See all tech content →</div></div>
   </div>
   <div class="card reveal">
-    <div class="card-media" style="aspect-ratio:4/3;background:linear-gradient(160deg,#08080e 0%,#050508 100%);"></div>
+    <div class="card-media" style="aspect-ratio:4/3;"><div class="card-fill cf2"><div class="card-frame"></div><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.08)" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg></div></div>
     <span class="card-tag">Photo</span>
     <div class="card-overlay" onclick="window.location='tech-apps.html'"><div class="card-cat">// app · saas</div><div class="card-title">App Walkthrough</div><div class="card-see">See all app content →</div></div>
   </div>
   <div class="card reveal">
-    <div class="card-media" style="aspect-ratio:4/3;background:linear-gradient(160deg,#0a0814 0%,#06060e 100%);"></div>
+    <div class="card-media" style="aspect-ratio:4/3;"><div class="card-fill cf3"><div class="card-frame"></div><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.08)" stroke-width="1.5"><path d="M12 2L15.09 8.26H22L17.55 12.5L19.64 18.76L12 14.51L4.36 18.76L6.45 12.5L2 8.26H8.91L12 2Z"/></svg></div></div>
     <span class="card-tag">Photo</span>
     <div class="card-overlay" onclick="window.location='tech-lifestyle.html'"><div class="card-cat">// lifestyle</div><div class="card-title">Everyday Carry Series</div><div class="card-see">See lifestyle content →</div></div>
   </div>
   <div class="card reveal">
-    <div class="card-media" style="aspect-ratio:4/3;background:linear-gradient(160deg,#080c10 0%,#050810 100%);"></div>
+    <div class="card-media" style="aspect-ratio:4/3;"><div class="card-fill cf4"><div class="card-frame"></div><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.08)" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16"/></svg></div></div>
     <span class="card-tag video">▶ Video</span>
     <div class="play-btn">▶</div>
     <div class="card-overlay" onclick="window.location='tech-unboxing.html'"><div class="card-cat">// review · ugc</div><div class="card-title">Honest Product Review</div><div class="card-see">See reviews →</div></div>
   </div>
   <div class="card reveal" style="grid-column:2/4;">
-    <div class="card-media" style="aspect-ratio:16/7;background:linear-gradient(160deg,#0c0a18 0%,#080614 100%);"></div>
+    <div class="card-media" style="aspect-ratio:16/7;"><div class="card-fill cf5"><div class="card-frame"></div><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="rgba(139,92,246,0.1)" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div></div>
     <span class="card-tag video">▶ Video</span>
     <div class="play-btn">▶</div>
     <div class="card-overlay" onclick="window.location='tech-unboxing.html'"><div class="card-cat">// unboxing · reveal</div><div class="card-title">Premium Unboxing — Brand Launch</div><div class="card-see">Explore unboxing →</div></div>
